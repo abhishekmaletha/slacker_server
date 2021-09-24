@@ -30,11 +30,11 @@ const authSlack = async (req, res, next) => {
             api_data = res.data;
             // webhook_url = res.data.incoming_webhook.url;
             console.log(api_data);
-            res.end(api_data);
+
         }).catch((e) => {
             console.log(e);
         });
-        // res.end('auth complete');
+        res.end(api_data);
     } catch (error) {
         res.status(400).send(error.message);
     }
