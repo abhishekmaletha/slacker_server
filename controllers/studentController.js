@@ -30,7 +30,7 @@ const authSlack = async (req, res, next) => {
             api_data = res.data;
             // webhook_url = res.data.incoming_webhook.url;
             console.log(api_data);
-            res.send(api_data);
+            res.end(api_data);
         }).catch((e) => {
             console.log(e);
         });
