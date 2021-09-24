@@ -12,9 +12,9 @@ const authSlack = async (req, res, next) => {
         var api_data = {};
         const clientID = `${process.env.SLACK_CLIENT_ID}`;
         const clientSECRET = `${process.env.SLACK_CLIENT_SECRET}`;
-        console.log(code)
-        console.log(clientID)
-        console.log(clientSECRET)
+        // console.log(code)
+        // console.log(clientID)
+        // console.log(clientSECRET)
 
         axios.post('https://slack.com/api/oauth.v2.access', new URLSearchParams({
             code,
@@ -26,10 +26,11 @@ const authSlack = async (req, res, next) => {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
         }).then((res) => {
-            console.log(res.data)
+            // console.log(res.data)
             api_data = res.data;
             // webhook_url = res.data.incoming_webhook.url;
-            // console.log(webhook_url);
+            console.log(api_data);
+            res.send(api_data);
         }).catch((e) => {
             console.log(e);
         });
