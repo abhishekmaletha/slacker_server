@@ -9,6 +9,7 @@ const authSlack = async (req, res, next) => {
     try {
         const code = req.query.code;
         console.log(code);
+        var api_data = {};
         const clientID = `${process.env.SLACK_CLIENT_ID}`;
         const clientSECRET = `${process.env.SLACK_CLIENT_SECRET}`;
         console.log(code)
