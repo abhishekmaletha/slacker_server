@@ -34,7 +34,7 @@ const authSlack = async (req, res, next) => {
         }).catch((e) => {
             console.log(e);
         });
-        res.end('auth complete');
+        // res.end('auth complete');
     } catch (error) {
         res.status(400).send(error.message);
     }
