@@ -28,12 +28,12 @@ const authSlack = async (req, res, next) => {
         }).then((res) => {
             console.log(res.data)
             api_data = res.data;
-            webhook_url = res.data.incoming_webhook.url;
-            console.log(webhook_url);
+            // webhook_url = res.data.incoming_webhook.url;
+            // console.log(webhook_url);
         }).catch((e) => {
             console.log(e);
         });
-        res.send(JSON.stringify(api_data) + 'https://5ab6-2405-201-6816-1856-5dae-94e-5b65-7949.ngrok.io/');
+        res.send(JSON.stringify(api_data));
     } catch (error) {
         res.status(400).send(error.message);
     }
