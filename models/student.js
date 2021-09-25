@@ -1,9 +1,9 @@
 class Student {
-    constructor(id, name, age, college) {
+    constructor(id, name, webhook, accessToken) {
         this.id = id;
         this.name = name;
-        this.age = age;
-        this.college = college;
+        this.webhook = webhook;
+        this.accessToken = accessToken;
     }
 }
 

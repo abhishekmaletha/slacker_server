@@ -1,5 +1,5 @@
 const express = require('express');
-const { authSlack,
+const {
     addStudent,
     getAllStudents,
     getStudent,
@@ -8,7 +8,7 @@ const { authSlack,
 } = require('../controllers/studentController');
 
 const router = express.Router();
-router.get('/auth', authSlack)
+//router.get('/auth', authSlack)
 router.post('/student', addStudent);
 router.get('/students', getAllStudents);
 router.get('/student/:id', getStudent);
