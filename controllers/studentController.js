@@ -5,45 +5,38 @@ const Student = require('../models/student');
 const firestore = firebase.firestore();
 const axios = require('axios');
 
-// const authSlack = async (req, res, next) => {
-//     try {
-//         const code = req.query.code;
-//         console.log(code);
-//         var api_data = {};
-//         const clientID = `${process.env.SLACK_CLIENT_ID}`;
-//         const clientSECRET = `${process.env.SLACK_CLIENT_SECRET}`;
-//         // console.log(code)
-//         // console.log(clientID)
-//         // console.log(clientSECRET)
+const sendMssg = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const student = await firestore.collection('students').doc(id);
+        const data = await student.get();
+        if (!data.exists) {
+            res.status(404).send('Student with the given ID not found');
+        } else {
+            // console.log(data.data().webhook);
+            // res.send(data.data().config.url);
+            axios.post(`${data.data().webhook}`, {
+                text: 'chamola rocks',
+            }).then(function (response) {
+                console.log('mssg send successfully');
+                res.end('send!', response);
+            })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
 
-//         axios.post('https://slack.com/api/oauth.v2.access', new URLSearchParams({
-//             code,
-//             client_id: clientID,
-//             client_secret: clientSECRET,
-
-//         }).toString(), {
-//             headers: {
-//                 "Content-Type": "application/x-www-form-urlencoded"
-//             }
-//         }).then((res) => {
-//             // console.log(res.data)
-//             api_data = res.data;
-//             // webhook_url = res.data.incoming_webhook.url;
-//             console.log(api_data);
-
-//         }).catch((e) => {
-//             console.log(e);
-//         });
-//         res.send(JSON.stringify(api_data));
-//     } catch (error) {
-//         res.status(400).send(error.message);
-//     }
-// }
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
 
 const addStudent = async (req, res, next) => {
     try {
+        const id = req.params.id
         const data = req.body;
-        await firestore.collection('students').doc().set(data);
+        await firestore.collection('students').doc(id).set(data);
         res.send('Record saved successfuly');
     } catch (error) {
         res.status(400).send(error.message);
@@ -117,5 +110,6 @@ module.exports = {
     getAllStudents,
     getStudent,
     updateStudent,
-    deleteStudent
+    deleteStudent,
+    sendMssg
 }
