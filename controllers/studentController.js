@@ -16,7 +16,19 @@ const sendMssg = async (req, res, next) => {
             // console.log(data.data().webhook);
             // res.send(data.data().config.url);
             axios.post(`${data.data().webhook}`, {
-                text: 'chamola rocks',
+                text: 'join to attend',
+                "attachments": [
+                    {
+                        "text": "click to open in browser",
+                        "actions": [
+                            {
+                                "name": "daily meet",
+                                "text": "Chess",
+                                "type": "button",
+                                "url": "https://meet.google.com/cka-sqrx-gyn",
+                            },
+                        ]
+                    }]
             }).then(function (response) {
                 console.log('mssg send successfully');
                 res.end('send!', response);
