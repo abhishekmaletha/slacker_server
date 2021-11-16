@@ -5,7 +5,11 @@ const {
     getStudent,
     updateStudent,
     deleteStudent,
-    sendMssg
+    sendMssg,
+    addTicket,
+    newMessageDrift,
+    newMessageIntercom,
+    newTicketZoho
 } = require('../controllers/studentController');
 
 const router = express.Router();
@@ -16,7 +20,10 @@ router.get('/student/:id', getStudent);
 router.put('/student/:id', updateStudent);
 router.delete('/student/:id', deleteStudent);
 router.post('/mssg/:id', sendMssg);
-
+router.post('/ticket-created', addTicket);
+router.post('/newDriftMessage', newMessageDrift)
+router.post('/newIntercomMessage', newMessageIntercom);
+router.post('/newZohoMessage', newTicketZoho)
 
 module.exports = {
     routes: router

@@ -116,6 +116,172 @@ const deleteStudent = async (req, res, next) => {
     }
 }
 
+// builder pattern
+// const sessionurl = "flipkart.com";
+async function updateSessionURL(sessionURL, requestor_email, zendeskDomain, apiToken, email_address) {
+    console.log("inside update function");
+    // convert combination of email and token to Base-64 
+    // email_address/token:api_token
+    const combinationSecret = email_address + `/token:` + apiToken;
+    const combinationSecretBase_64 = Buffer.from(combinationSecret).toString('base64');
+    const zendeskDomainUrl = `https://` + zendeskDomain + `.zendesk.com/api/v2/users/search.json?query=` + requestor_email;
+    const configHeaders = {
+        "content-type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Basic ${combinationSecretBase_64}`,
+    };
+    await axios.get(zendeskDomainUrl, {
+        headers: configHeaders
+    }).then(function async(response) {
+        console.log(response.data.users[0].id);
+        const end_urer_id = response.data.users[0].id;
+        const update_zendesk_url = `https://` + zendeskDomain + `.zendesk.com/api/v2/users/` + end_urer_id;
+        axios.put(update_zendesk_url, {
+            "user": { "user_fields": { "contxt_live_session": sessionURL } }
+        },
+            {
+                headers: configHeaders
+            }).then(function (response) {
+                console.log("session url updated sucessfully ", response.data)
+            }).catch(function (error) {
+                console.log(error);
+            })
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
+const addTicket = async (req, res, next) => {
+    console.log("add ticket invoked");
+    try {
+        console.log(req.body)
+        const requestor_email = req.body.requestor_email;
+        const api_token = "wsJNwMsgwEOaqxe0wuVhHldIXFHQ4g0hY3rQ6ebK";
+        const sessionURL = "www.google.com";
+        const domain = "maletha";
+        const email_address = "abhishek@contxt.io";
+        try {
+            await updateSessionURL(sessionURL, requestor_email, domain, api_token, email_address);
+            // console.log("end user is ", end_user_id);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+    catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+const newMessageDrift = async (req, res, next) => {
+    try {
+        const accessTokenDrift = "VkQ0QdazVuz5GLDX5VIG5bMMo3InPuBp";
+        console.log("drift message", req.body.data);
+        console.log("drift message", req.body.data.author.id);
+        updateSessionUrlDrift(req.body.data.author.id, "googleYahoo.com", accessTokenDrift)
+        res.send('api working fine');
+    }
+    catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+async function updateSessionUrlDrift(contactId, sessionURL, accessToken) {
+    const url = `https://driftapi.com/contacts/${contactId}`
+    const configHeaders = {
+        "Authorization": `Bearer ${accessToken}`,
+    };
+    axios({
+        method: 'patch',
+        url: url,
+        data: {
+            "attributes": { "contxt_live_session": `${sessionURL}` }
+        },
+        headers: configHeaders
+    }).then(function (response) {
+        console.log("session url in drift, updated sucessfully ", response.data);
+
+    }).catch(function (error) {
+        console.log(error);
+    })
+}
+//intercom
+const newMessageIntercom = async (req, res, next) => {
+    // token dG9rOjFkYTkxYjQ2X2E1NTBfNDQ3ZV9iNWZmXzYwZGNjNmNjZTkwMzoxOjA=
+    try {
+        console.log("intercom message", req.body.data.item.id);
+        const conversationId = req.body.data.item.id;
+        const sessionURL = "hola.com";
+        const accessToken = "dG9rOjY4NjFhMmQ5X2VlZWVfNGVkN185MmViX2ZiZDYwYjI2MzQxMjoxOjA=";
+        updateSessionUrlInterCom(conversationId, sessionURL, accessToken)
+        res.send('api working fine');
+    }
+    catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
+async function updateSessionUrlInterCom(conversationId, sessionURL, accessToken) {
+    const configHeaders = {
+        "Authorization": `Bearer ${accessToken}`,
+    };
+    const retriveConversationUrl = `https://api.intercom.io/conversations/${conversationId}`;
+    const authourID = await axios({
+        method: 'get',
+        url: retriveConversationUrl,
+        headers: configHeaders
+    }).then(function (response) {
+        console.log("conversation detials are ", response.data.source.author.id);
+        return response.data.source.author.id;
+
+    }).catch(function (error) {
+        console.log("field already present");
+    })
+    //create attribute if not present
+    const createIntercomContxtAttribute = "https://api.intercom.io/data_attributes";
+    await axios({
+        method: 'post',
+        url: createIntercomContxtAttribute,
+        data: {
+            "name": "contxt_live_session",
+            "description": "live session url",
+            "data_type": "string",
+            "model": "contact"
+        },
+        headers: configHeaders
+    }).then(function (response) {
+        console.log("attribute created ", response.data);
+
+    }).catch(function (error) {
+        console.log(error);
+    }).finally(function () {
+        //update link with session url
+        const updateIntercomSessionurl = `https://api.intercom.io/contacts/${authourID}`
+        axios({
+            method: 'put',
+            url: updateIntercomSessionurl,
+            data: {
+                "custom_attributes": {
+                    "contxt_live_session": `${sessionURL}`
+                }
+            },
+            headers: configHeaders
+        }).then(function (response) {
+            console.log("session url in drift, updated sucessfully ", response.data);
+
+        }).catch(function (error) {
+            console.log(error);
+        })
+    });
+
+}
+const newTicketZoho = async (req, res, next) => {
+    try {
+        console.log('zoho called');
+        res.send('api working fine');
+    }
+    catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
 module.exports = {
     //authSlack,
     addStudent,
@@ -123,5 +289,9 @@ module.exports = {
     getStudent,
     updateStudent,
     deleteStudent,
-    sendMssg
+    sendMssg,
+    addTicket,
+    newMessageDrift,
+    newMessageIntercom,
+    newTicketZoho
 }
