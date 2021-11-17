@@ -9,7 +9,8 @@ const {
     addTicket,
     newMessageDrift,
     newMessageIntercom,
-    newTicketZoho
+    newTicketZoho,
+    checkTicketZoho
 } = require('../controllers/studentController');
 
 const router = express.Router();
@@ -23,7 +24,8 @@ router.post('/mssg/:id', sendMssg);
 router.post('/ticket-created', addTicket);
 router.post('/newDriftMessage', newMessageDrift)
 router.post('/newIntercomMessage', newMessageIntercom);
-router.post('/newZohoMessage', newTicketZoho)
+router.post('/newZohoMessage', newTicketZoho);
+router.get('/newZohoMessage', checkTicketZoho)
 
 module.exports = {
     routes: router

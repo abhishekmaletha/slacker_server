@@ -274,8 +274,16 @@ async function updateSessionUrlInterCom(conversationId, sessionURL, accessToken)
 }
 const newTicketZoho = async (req, res, next) => {
     try {
-        console.log(res);
+        console.log(res.body);
         res.status(200).send("successful");
+    }
+    catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+const checkTicketZoho = async (req, res, next) => {
+    try {
+        res.status(200).send('got it!');
     }
     catch (error) {
         res.status(400).send(error.message);
@@ -285,6 +293,7 @@ const newTicketZoho = async (req, res, next) => {
 module.exports = {
     //authSlack,
     addStudent,
+    checkTicketZoho,
     getAllStudents,
     getStudent,
     updateStudent,
