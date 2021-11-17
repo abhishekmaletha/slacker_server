@@ -274,8 +274,8 @@ async function updateSessionUrlInterCom(conversationId, sessionURL, accessToken)
 }
 const newTicketZoho = async (req, res, next) => {
     try {
-        console.log('zoho called');
-        res.status(200).send("successful");
+        // console.log(res);
+        res.status(200).send(res);
     }
     catch (error) {
         res.status(400).send(error.message);
